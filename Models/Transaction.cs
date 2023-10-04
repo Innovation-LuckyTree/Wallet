@@ -1,12 +1,12 @@
 ﻿namespace Wallet.Models
 {
-    public enum GameTransactionType { Debit, Credit };
-    public record GameTransaction
+    public enum PaymentTransactionType { Debit, Credit };
+    public record PaymentTransaction
     {
-        public Guid Id { get; set; }
-        public Guid ReferenceId { get; set; }
-        GameTransactionType TransactionType { get; set; }
-        public decimal Amount { get; set; }
-        public DateTime? Created { get; set; }
+        public Guid Id { get; init; }
+        public Guid ReferenceId { get; init; }
+        public PaymentTransactionType TransactionType { get; init; }
+        public decimal Amount { get; init; }
+        public DateTime? Created { get; init; }
     }
 }

@@ -10,7 +10,7 @@ namespace Wallet.Services.Interface
         public string Deserialize(string json);
         public decimal CalculateBalance();
         ITransactionEvent CreateNewTransaction();
-        ITransactionEvent FilterByTransactionType(GameTransactionType transactionType);
+        ITransactionEvent FilterByTransactionType(PaymentTransactionType transactionType);
         //only get what's connected in the wallet
         ITransactionEvent GetTransactionById(Guid TransactionID);
     }
