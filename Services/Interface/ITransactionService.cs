@@ -10,20 +10,20 @@ namespace Wallet.Services
 
     public interface ITransactionEventResult
     {
-        // Define properties or methods for the result, e.g., Success, Message, Data, etc.
         string? Message { get; }
-        object? Data { get; } // This can be more specific, e.g., GameTransaction or List<GameTransaction>
+        object? Data { get; } 
     }
     public interface ITransactionEventResultFactory
     {
         ITransactionEventResult CreateSuccessResult(string message, object data);
         ITransactionEventResult CreateFailureResult(string message);
     }
-    public interface ITransactionEvent
+    public interface ITransactionService
     {
         Task<ITransactionEventResult> AddAsync(PaymentTransaction transaction);
         Task<ITransactionEventResult> ShowAsync(Guid TransactionID);
-        Task<ITransactionEventResult> Transactions(Func<PaymentTransaction, bool> query);
+        Task<ITransactionEventResult> Transactions(Func<IQueryable<PaymentTransaction>, IQueryable<PaymentTransaction>> query);
         Task<ITransactionEventResult> Exist(Guid TransactionID);
+
     }
 }

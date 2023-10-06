@@ -6,12 +6,12 @@ using Wallet.Models;
 namespace Wallet.Services
 {
 
-    public class TransactionEvent : ITransactionEvent
+    public class TransactionService : ITransactionService
     {
         private readonly PaymentTransactionDbContext _dbContext;
         private readonly ITransactionEventResultFactory _result;
 
-        public TransactionEvent(PaymentTransactionDbContext dbContext, ITransactionEventResultFactory result)
+        public TransactionService(PaymentTransactionDbContext dbContext, ITransactionEventResultFactory result)
         {
             _dbContext = dbContext;
             _result = result;
@@ -59,9 +59,12 @@ namespace Wallet.Services
             return _result.CreateSuccessResult($"Transaction:{TransactionID} retrieved", transaction);
         }
 
-        public async Task<ITransactionEventResult> Transactions(Func<PaymentTransaction, bool> query)
+        public async Task<ITransactionEventResult> Transactions(Func<IQueryable<PaymentTransaction>, IQueryable<PaymentTransaction>> query)
         {
-            var transactions = Task.Factory.StartNew(() => { return _dbContext.PaymentTransactions.Where(query).ToImmutableList(); });
+            var transactions = Task.Factory.StartNew(() => {
+                var paymentTransactions = _dbContext.PaymentTransactions;
+                var execQuery = query(paymentTransactions);
+                return execQuery.ToImmutableList(); });
             await transactions;
             if (transactions.Result == null)
                 return _result.CreateFailureResult($"Failed to get queried transactions");
