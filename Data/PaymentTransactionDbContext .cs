@@ -1,15 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Wallet.Models;
+namespace Wallet.Data;
 
-namespace Wallet.Data
+public class PaymentTransactionDbContext : DbContext
 {
-    public class PaymentTransactionDbContext : DbContext
-    {
-        public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
+    public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            //optionsBuilder.UseSqlServer("Your_Connection_String_Here");
-        }
+    public PaymentTransactionDbContext(DbContextOptions<PaymentTransactionDbContext> options)
+        : base(options)
+    {
+
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+
     }
 }
+
