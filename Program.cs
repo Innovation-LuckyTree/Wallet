@@ -4,6 +4,7 @@ using Wallet.Config;
 using Wallet.Data;
 using Wallet.Services.Interface;
 using Wallet.Services;
+using Wallet.Services.Factory;
 
 namespace Wallet;
 
@@ -25,8 +26,9 @@ public class Program
           options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         // Service registrations
-        builder.Services.AddSingleton<ILedgerService, LedgerService>();
-        builder.Services.AddSingleton<ITransactionService, TransactionService>();
+        builder.Services.AddSingleton<ITransactionEventResultFactory, TransactionEventResultFactory>();
+        builder.Services.AddTransient<ILedgerService, LedgerService>();
+        builder.Services.AddTransient<ITransactionService, TransactionService>();
 
         var app = builder.Build();
 
