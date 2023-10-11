@@ -4,11 +4,9 @@ namespace Wallet.Services.Interface;
 
 public interface ILedgerService
 {
-    LedgerWallet Wallet { get; }
-
-    Task<decimal> CalculateBalanceAsync();
+    Task<decimal> CalculateBalanceAsync(Guid referenceId);
     Task<ITransactionEventResult> CreateNewTransactionAsync(PaymentTransaction transaction);
-    Task<ICollection<PaymentTransaction>> FilterByTransactionTypeAsync(PaymentTransactionType transactionType);
+    Task<ICollection<PaymentTransaction>> FilterByTransactionTypeAsync(Guid referenceId, PaymentTransactionType transactionType);
     Task<PaymentTransaction> GetTransactionByIdAsync(Guid TransactionID);
-    Task<ICollection<PaymentTransaction>> FilterByTransactionAsync(PaymentTransactionType transactionType, int skip, int take);
+    Task<ICollection<PaymentTransaction>> FilterByTransactionAsync(Guid referenceId, PaymentTransactionType transactionType, int skip, int take);
 }

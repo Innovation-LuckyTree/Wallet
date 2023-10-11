@@ -6,13 +6,11 @@ namespace Wallet.Services;
 
 public class LedgerService :  ILedgerService
 {
-    public LedgerWallet Wallet { get; private set; }
 
     private readonly ITransactionService _transactionEvent;
 
-    public LedgerService(LedgerWallet wallet, ITransactionService transactionEvent)
+    public LedgerService(ITransactionService transactionEvent)
     {
-        Wallet = wallet;
         _transactionEvent = transactionEvent;
     }
     private static void Validate(TransactionEventResult result)
@@ -36,9 +34,9 @@ public class LedgerService :  ILedgerService
         }
         return resultList;
     }
-    public async Task<decimal> CalculateBalanceAsync()
+    public async Task<decimal> CalculateBalanceAsync(Guid referenceId)
     {
-        var transactionResult = await _transactionEvent.Transactions(query => query.Where(x => x.ReferenceId == Wallet.ReferenceID));
+        var transactionResult = await _transactionEvent.Transactions(query => query.Where(x => x.ReferenceId == referenceId));
         Validate((TransactionEventResult)transactionResult);
 
         var transactions = toPaymentTransactions(transactionResult);
@@ -54,17 +52,17 @@ public class LedgerService :  ILedgerService
         Validate((TransactionEventResult)transactionResult);
         return transactionResult;
     }
-    public async Task<ICollection<PaymentTransaction>> FilterByTransactionAsync(PaymentTransactionType transactionType, int skip, int take)
+    public async Task<ICollection<PaymentTransaction>> FilterByTransactionAsync(Guid referenceId,PaymentTransactionType transactionType, int skip, int take)
     {
         var transactionResult = await _transactionEvent.Transactions(query => 
-            query.Where(x=>  x.TransactionType == transactionType && x.ReferenceId == Wallet.ReferenceID)
+            query.Where(x=>  x.TransactionType == transactionType && x.ReferenceId == referenceId)
             .Skip(skip).Take(take));
         return toPaymentTransactions((TransactionEventResult)transactionResult);
     }
-    public async Task<ICollection<PaymentTransaction>> FilterByTransactionTypeAsync(PaymentTransactionType transactionType)
+    public async Task<ICollection<PaymentTransaction>> FilterByTransactionTypeAsync(Guid referenceId, PaymentTransactionType transactionType)
     {
         var transactionResult = await _transactionEvent.Transactions(query => query.
-            Where(x => x.TransactionType == transactionType && x.ReferenceId == Wallet.ReferenceID));
+            Where(x => x.TransactionType == transactionType && x.ReferenceId == referenceId));
         return toPaymentTransactions((TransactionEventResult)transactionResult);
     }
 

@@ -5,35 +5,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Wallet.Config;
 
-public class Startup
-{
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+//public class Startup
+//{
+//    public Startup(IConfiguration configuration)
+//    {
+//        Configuration = configuration;
+//    }
 
-    public IConfiguration Configuration { get; }
+//    public IConfiguration Configuration { get; }
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-        services.AddDbContext<PaymentTransactionDbContext>(options =>
-          options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+//    public void ConfigureServices(IServiceCollection services)
+//    {
+//        services.AddControllers();
+//        services.AddEndpointsApiExplorer();
+//        services.AddSwaggerGen();
+//        services.AddDbContext<PaymentTransactionDbContext>(options =>
+//          options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+//        services.AddDbContext<LedgerWalletDbContext>(options =>
+//          options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-        // Register your services here
-        services.AddSingleton<ILedgerService, LedgerService>();
-        services.AddSingleton<ITransactionService, TransactionService>(); // Replace with your actual implementation
-    }
+//        // Register your services here
+//        services.AddSingleton<ILedgerService, LedgerService>();
+//        services.AddSingleton<ITransactionService, TransactionService>(); // Replace with your actual implementation
+//    }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        app.UseRouting();
+//    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+//    {
+//        app.UseRouting();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
-    }
-}
+//        app.UseEndpoints(endpoints =>
+//        {
+//            endpoints.MapControllers();
+//        });
+//    }
+//}
