@@ -10,20 +10,24 @@ namespace Wallet.Services;
 public class TransactionService : ITransactionService
 {
     private readonly PaymentTransactionDbContext _dbContext;
-    private readonly ITransactionEventResultFactory _result;
+    private readonly IWalletEventResultFactory _result;
+    private readonly PaymentTransactionValidator _validator;
 
-    public TransactionService(PaymentTransactionDbContext dbContext, ITransactionEventResultFactory result)
+    public TransactionService(PaymentTransactionDbContext dbContext, IWalletEventResultFactory result, PaymentTransactionValidator validator)
     {
         _dbContext = dbContext;
         _result = result;
+        _validator = validator;
     }
 
-    public async Task<ITransactionEventResult> AddAsync(PaymentTransaction transaction)
+    public async Task<IWalletEventResult> AddAsync(PaymentTransaction transaction)
     {
-        ITransactionEventResult result;
+        IWalletEventResult result;
         Task task = null; 
         try
         {
+            if (!_validator.Validate(transaction).IsValid)
+                throw new Exception(nameof(transaction));
             _dbContext.PaymentTransactions.Add(transaction);
             task =  _dbContext.SaveChangesAsync();
             
@@ -32,6 +36,7 @@ public class TransactionService : ITransactionService
         {
             result = _result.CreateFailureResult($"failed to add transaction{transaction.Id}" +
                 $"\n Error:{ex.Message}");
+            return result;
         }
 
         if (task != null)
@@ -42,7 +47,7 @@ public class TransactionService : ITransactionService
         return result;
     }
 
-    public async Task<ITransactionEventResult> Exist(Guid TransactionID)
+    public async Task<IWalletEventResult> Exist(Guid TransactionID)
     {
         var transaction = _dbContext.PaymentTransactions.AnyAsync(t => t.Id == TransactionID);
         await transaction;
@@ -51,7 +56,7 @@ public class TransactionService : ITransactionService
         return _result.CreateSuccessResult($"Transaction:{TransactionID} retrieved", transaction);
     }
 
-    public async Task<ITransactionEventResult> ShowAsync(Guid TransactionID)
+    public async Task<IWalletEventResult> ShowAsync(Guid TransactionID)
     {
         var transaction = _dbContext.PaymentTransactions.FirstOrDefaultAsync(t => t.Id == TransactionID);
         await transaction;
@@ -60,7 +65,7 @@ public class TransactionService : ITransactionService
         return _result.CreateSuccessResult($"Transaction:{TransactionID} retrieved", transaction);
     }
 
-    public async Task<ITransactionEventResult> Transactions(Func<IQueryable<PaymentTransaction>, IQueryable<PaymentTransaction>> query)
+    public async Task<IWalletEventResult> Transactions(Func<IQueryable<PaymentTransaction>, IQueryable<PaymentTransaction>> query)
     {
         var transactions = Task.Factory.StartNew(() => {
             var paymentTransactions = _dbContext.PaymentTransactions;

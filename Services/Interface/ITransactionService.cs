@@ -3,21 +3,23 @@
 using System;
 using Wallet.Models;
 
-public interface ITransactionEventResult
+public interface IWalletEventResult
 {
+    public enum Status { Success, Failed, Pending };
+    Status isSuccess { get; }
     string? Message { get; }
     object? Data { get; }
 }
-public interface ITransactionEventResultFactory
+public interface IWalletEventResultFactory
 {
-    ITransactionEventResult CreateSuccessResult(string message, object data);
-    ITransactionEventResult CreateFailureResult(string message);
+    IWalletEventResult CreateSuccessResult(string message, object data);
+    IWalletEventResult CreateFailureResult(string message);
 }
 public interface ITransactionService
 {
-    Task<ITransactionEventResult> AddAsync(PaymentTransaction transaction);
-    Task<ITransactionEventResult> ShowAsync(Guid TransactionID);
-    Task<ITransactionEventResult> Transactions(Func<IQueryable<PaymentTransaction>, IQueryable<PaymentTransaction>> query);
-    Task<ITransactionEventResult> Exist(Guid TransactionID);
+    Task<IWalletEventResult> AddAsync(PaymentTransaction transaction);
+    Task<IWalletEventResult> ShowAsync(Guid TransactionID);
+    Task<IWalletEventResult> Transactions(Func<IQueryable<PaymentTransaction>, IQueryable<PaymentTransaction>> query);
+    Task<IWalletEventResult> Exist(Guid TransactionID);
 
 }

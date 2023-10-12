@@ -26,7 +26,7 @@ public class Program
           options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         // Service registrations
-        builder.Services.AddSingleton<ITransactionEventResultFactory, TransactionEventResultFactory>();
+        builder.Services.AddSingleton<IWalletEventResultFactory, WalletEventResultFactory>();
         builder.Services.AddTransient<ILedgerService, LedgerService>();
         builder.Services.AddTransient<ITransactionService, TransactionService>();
 

@@ -2,30 +2,30 @@
 
 namespace Wallet.Services.Factory;
 
-public record TransactionEventResult : ITransactionEventResult
+public record WalletEventResult : IWalletEventResult
 {
-    public enum Status { Success, Failed, Pending};
-    public Status Success { get; set; } = Status.Pending;
-    public string Message { get; set; }
-    public object Data { get; set; }
+   
+    public IWalletEventResult.Status isSuccess { get; init; } = IWalletEventResult.Status.Pending;
+    public string? Message { get; init; }
+    public object? Data { get; init; }
 }
-public class TransactionEventResultFactory : ITransactionEventResultFactory
+public class WalletEventResultFactory : IWalletEventResultFactory
 {
-    public ITransactionEventResult CreateSuccessResult(string message, object data)
+    public IWalletEventResult CreateSuccessResult(string message, object data)
     {
-        return new TransactionEventResult
+        return new WalletEventResult
         {
-            Success = TransactionEventResult.Status.Success,
+            isSuccess = IWalletEventResult.Status.Success,
             Message = message,
             Data = data
         };
     }
 
-    public ITransactionEventResult CreateFailureResult(string message)
+    public IWalletEventResult CreateFailureResult(string message)
     {
-        return new TransactionEventResult
+        return new WalletEventResult
         {
-            Success = TransactionEventResult.Status.Failed,
+            isSuccess = IWalletEventResult.Status.Failed,
             Message = message,
         };
     }
