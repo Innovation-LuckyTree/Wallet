@@ -1,6 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
-using Wallet.Config;
+//using Wallet.Config;
 using Wallet.Data;
 using Wallet.Services.Interface;
 using Wallet.Services;
@@ -20,6 +20,10 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         // Database configurations
+
+        builder.Services.AddDbContext<WalletLedgerDbContext>(options =>
+          options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
         builder.Services.AddDbContext<PaymentTransactionDbContext>(options =>
           options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddDbContext<LedgerWalletDbContext>(options =>

@@ -26,9 +26,9 @@ public class LedgerService : ILedgerService
             throw new InvalidOperationException(result.Message);
 
     }
-    private static ICollection<PaymentTransaction> toPaymentTransactions(object data)
+    private static ICollection<WalletLedger> toPaymentTransactions(object data)
     {
-        if (data is not ICollection<PaymentTransaction> resultList)
+        if (data is not ICollection<WalletLedger> resultList)
         {
             throw new Exception("Invalid transaction data type");
         }
@@ -39,42 +39,43 @@ public class LedgerService : ILedgerService
         }
         return resultList;
     }
-    public async Task<decimal> CalculateBalanceAsync(Guid referenceId)
+    public async Task<decimal> CalculateBalanceAsync(Guid accountId)
     {
-        var transactionResult = await _transactionEvent.Transactions(query => query.Where(x => x.ReferenceId == referenceId));
+        var transactionResult = await _transactionEvent.Transactions(query => query.Where(x => x.AccountId == accountId));
         Validate((WalletEventResult)transactionResult);
 
         var transactions = toPaymentTransactions(transactionResult);
 
-        return transactions.Sum(transaction =>
-            transaction.TransactionType == PaymentTransactionType.Credit ? transaction.Amount : -transaction.Amount
-        );
+        //return transactions.Sum(transaction =>
+        //    transaction.TransactionType == PaymentTransactionType.Credit ? transaction.Amount : -transaction.Amount
+        //);
+        return transactions.Sum(t => t.Amount);
     }
 
-    public async Task<IWalletEventResult> CreateNewTransactionAsync(PaymentTransaction transaction)
+    public async Task<IWalletEventResult> CreateNewTransactionAsync(WalletLedger walletLedger)
     {
-        var transactionResult = await _transactionEvent.AddAsync(transaction);
+        var transactionResult = await _transactionEvent.AddAsync(walletLedger);
         Validate((WalletEventResult)transactionResult);
         return transactionResult;
     }
-    public async Task<ICollection<PaymentTransaction>> FilterByTransactionAsync(Guid referenceId, PaymentTransactionType transactionType, int skip, int take)
+    public async Task<ICollection<WalletLedger>> FilterByTransactionAsync(Guid accountId, string transactionType, int skip, int take)
     {
         var transactionResult = await _transactionEvent.Transactions(query =>
-            query.Where(x => x.TransactionType == transactionType && x.ReferenceId == referenceId)
+            query.Where(x => x.TransactionType == transactionType && x.AccountId == accountId)
             .Skip(skip).Take(take));
         return toPaymentTransactions((WalletEventResult)transactionResult);
     }
-    public async Task<ICollection<PaymentTransaction>> FilterByTransactionTypeAsync(Guid referenceId, PaymentTransactionType transactionType)
+    public async Task<ICollection<WalletLedger>> FilterByTransactionTypeAsync(Guid accountId, string transactionType)
     {
         var transactionResult = await _transactionEvent.Transactions(query => query.
-            Where(x => x.TransactionType == transactionType && x.ReferenceId == referenceId));
+            Where(x => x.TransactionType == transactionType && x.AccountId == accountId));
         return toPaymentTransactions((WalletEventResult)transactionResult);
     }
 
-    public async Task<PaymentTransaction> GetTransactionByIdAsync(Guid TransactionID)
+    public async Task<WalletLedger> GetTransactionByIdAsync(Guid TransactionID)
     {
         var query = await _transactionEvent.ShowAsync(TransactionID);
-        if (query is not PaymentTransaction result)
+        if (query is not WalletLedger result)
             throw new Exception("Invalid transaction data type");
         return result;
     }
@@ -121,7 +122,7 @@ public class LedgerService : ILedgerService
         var existingWallet = await GetLedgerWalletAsync(id);
         if (existingWallet != null)
         {
-            ledgerWallets.Remove(existingWallet);
+            _ledgerWalletDb.Remove(existingWallet);
         }
     }
 
