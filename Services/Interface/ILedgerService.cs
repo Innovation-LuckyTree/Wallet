@@ -1,12 +1,15 @@
 ﻿using Wallet.Models;
+using Wallet.RequestModel;
 
 namespace Wallet.Services.Interface;
 
 public interface ILedgerService
 {
-    Task<decimal> CalculateBalanceAsync(Guid referenceId);
-    Task<IWalletEventResult> CreateNewTransactionAsync(PaymentTransaction transaction);
-    Task<ICollection<PaymentTransaction>> FilterByTransactionTypeAsync(Guid referenceId, PaymentTransactionType transactionType);
-    Task<PaymentTransaction> GetTransactionByIdAsync(Guid TransactionID);
-    Task<ICollection<PaymentTransaction>> FilterByTransactionAsync(Guid referenceId, PaymentTransactionType transactionType, int skip, int take);
+    Task<decimal> CalculateBalanceAsync(Guid accountId);
+    Task<IWalletEventResult> CreateNewTransactionAsync(WalletLedger walletLedger);
+    Task<ICollection<WalletLedger>> FilterByTransactionTypeAsync(Guid accountId, string transactionType);
+    Task<ICollection<WalletLedger>> GetTransaction(TransactionRequestModel transactionRequest);
+    Task<WalletLedger> GetTransactionByTransactionNoAsync(string transactionNo);
+    Task<WalletLedger> GetTransactionByAccountIdAsync(Guid accountId);
+    Task<ICollection<WalletLedger>> FilterByTransactionAsync(Guid accountId, string transactionType, int skip, int take);
 }

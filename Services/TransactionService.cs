@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
 using Wallet.Data;
 using Wallet.Models;
 using Wallet.Services.Interface;
@@ -9,32 +11,32 @@ namespace Wallet.Services;
 
 public class TransactionService : ITransactionService
 {
-    private readonly PaymentTransactionDbContext _dbContext;
+    private readonly WalletLedgerDbContext _dbContext;
     private readonly IWalletEventResultFactory _result;
-    private readonly PaymentTransactionValidator _validator;
+    private readonly WalletLedgerValidator _validator;
 
-    public TransactionService(PaymentTransactionDbContext dbContext, IWalletEventResultFactory result, PaymentTransactionValidator validator)
+    public TransactionService(WalletLedgerDbContext dbContext, IWalletEventResultFactory result, WalletLedgerValidator validator)
     {
         _dbContext = dbContext;
         _result = result;
         _validator = validator;
     }
 
-    public async Task<IWalletEventResult> AddAsync(PaymentTransaction transaction)
+    public async Task<IWalletEventResult> AddAsync(WalletLedger walletLedger)
     {
         IWalletEventResult result;
         Task task = null; 
         try
         {
-            if (!_validator.Validate(transaction).IsValid)
-                throw new Exception(nameof(transaction));
-            _dbContext.PaymentTransactions.Add(transaction);
+            if (!_validator.Validate(walletLedger).IsValid)
+                throw new Exception(nameof(walletLedger));
+            _dbContext.WalletLedgers.Add(walletLedger);
             task =  _dbContext.SaveChangesAsync();
             
         }
         catch (Exception ex)
         {
-            result = _result.CreateFailureResult($"failed to add transaction{transaction.Id}" +
+            result = _result.CreateFailureResult($"failed to add transaction{walletLedger.Id}" +
                 $"\n Error:{ex.Message}");
             return result;
         }
@@ -42,34 +44,43 @@ public class TransactionService : ITransactionService
         if (task != null)
             await task;
 
-        result = _result.CreateSuccessResult($"transaction successfully created:{transaction.Id}", transaction);
+        result = _result.CreateSuccessResult($"transaction successfully created:{walletLedger.Id}", walletLedger);
 
         return result;
     }
 
     public async Task<IWalletEventResult> Exist(Guid TransactionID)
     {
-        var transaction = _dbContext.PaymentTransactions.AnyAsync(t => t.Id == TransactionID);
+        var transaction = _dbContext.WalletLedgers.AnyAsync(t => t.Id == TransactionID);
         await transaction;
         if (transaction == null)
             return _result.CreateFailureResult($"Failed to get Transaction{TransactionID}");
         return _result.CreateSuccessResult($"Transaction:{TransactionID} retrieved", transaction);
     }
 
-    public async Task<IWalletEventResult> ShowAsync(Guid TransactionID)
+    public async Task<IWalletEventResult> GetByAccountId(Guid accountId)
     {
-        var transaction = _dbContext.PaymentTransactions.FirstOrDefaultAsync(t => t.Id == TransactionID);
+        var transaction = _dbContext.WalletLedgers.FirstOrDefaultAsync(t => t.AccountId == accountId);
         await transaction;
         if (transaction == null)
-            return _result.CreateFailureResult($"Failed to get Transaction{TransactionID}");
-        return _result.CreateSuccessResult($"Transaction:{TransactionID} retrieved", transaction);
+            return _result.CreateFailureResult($"Failed to get Transaction{accountId}");
+        return _result.CreateSuccessResult($"Transaction:{accountId} retrieved", transaction);
     }
 
-    public async Task<IWalletEventResult> Transactions(Func<IQueryable<PaymentTransaction>, IQueryable<PaymentTransaction>> query)
+    public async Task<IWalletEventResult> GetByTransactionNo(string transactionNo)
+    {
+        var transaction = _dbContext.WalletLedgers.FirstOrDefaultAsync(t => t.TransactionNo == transactionNo);
+        await transaction;
+        if (transaction == null)
+            return _result.CreateFailureResult($"Failed to get Transaction{transactionNo}");
+        return _result.CreateSuccessResult($"Transaction:{transactionNo} retrieved", transaction);
+    }
+
+    public async Task<IWalletEventResult> Transactions(Func<IQueryable<WalletLedger>, IQueryable<WalletLedger>> query)
     {
         var transactions = Task.Factory.StartNew(() => {
-            var paymentTransactions = _dbContext.PaymentTransactions;
-            var execQuery = query(paymentTransactions);
+            var walletLedgers = _dbContext.WalletLedgers;
+            var execQuery = query(walletLedgers);
             return execQuery.ToImmutableList(); });
         await transactions;
         if (transactions.Result == null)
