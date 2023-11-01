@@ -18,7 +18,8 @@ public interface IWalletEventResultFactory
 public interface ITransactionService
 {
     Task<IWalletEventResult> AddAsync(WalletLedger walletLedger);
-    Task<IWalletEventResult> ShowAsync(Guid TransactionID);
+    Task<IWalletEventResult> GetByAccountId(Guid accountId);
+    Task<IWalletEventResult> GetByTransactionNo(string transactionNo);
     Task<IWalletEventResult> Transactions(Func<IQueryable<WalletLedger>, IQueryable<WalletLedger>> query);
     Task<IWalletEventResult> Exist(Guid TransactionID);
 

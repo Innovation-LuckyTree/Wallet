@@ -8,7 +8,7 @@
         public string TransactionNo { get; init; }
         public string TransactionType { get; init; }
         public decimal Amount { get; init; }
-        public DateTime? TransactionDate { get; init; }
-        public DateTime? DateCreated { get; init; }
+        public DateTime TransactionDate { get; init; }
+        public DateTime DateCreated { get; init; }
     }
 }

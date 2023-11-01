@@ -58,13 +58,22 @@ public class TransactionService : ITransactionService
         return _result.CreateSuccessResult($"Transaction:{TransactionID} retrieved", transaction);
     }
 
-    public async Task<IWalletEventResult> ShowAsync(Guid TransactionID)
+    public async Task<IWalletEventResult> GetByAccountId(Guid accountId)
     {
-        var transaction = _dbContext.WalletLedgers.FirstOrDefaultAsync(t => t.Id == TransactionID);
+        var transaction = _dbContext.WalletLedgers.FirstOrDefaultAsync(t => t.AccountId == accountId);
         await transaction;
         if (transaction == null)
-            return _result.CreateFailureResult($"Failed to get Transaction{TransactionID}");
-        return _result.CreateSuccessResult($"Transaction:{TransactionID} retrieved", transaction);
+            return _result.CreateFailureResult($"Failed to get Transaction{accountId}");
+        return _result.CreateSuccessResult($"Transaction:{accountId} retrieved", transaction);
+    }
+
+    public async Task<IWalletEventResult> GetByTransactionNo(string transactionNo)
+    {
+        var transaction = _dbContext.WalletLedgers.FirstOrDefaultAsync(t => t.TransactionNo == transactionNo);
+        await transaction;
+        if (transaction == null)
+            return _result.CreateFailureResult($"Failed to get Transaction{transactionNo}");
+        return _result.CreateSuccessResult($"Transaction:{transactionNo} retrieved", transaction);
     }
 
     public async Task<IWalletEventResult> Transactions(Func<IQueryable<WalletLedger>, IQueryable<WalletLedger>> query)

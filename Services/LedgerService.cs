@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Npgsql.Internal.TypeHandlers.LTreeHandlers;
 using Wallet.Data;
 using Wallet.Models;
+using Wallet.RequestModel;
 using Wallet.Services.Factory;
 using Wallet.Services.Interface;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Wallet.Services;
 
@@ -72,14 +75,30 @@ public class LedgerService : ILedgerService
         return toPaymentTransactions((WalletEventResult)transactionResult);
     }
 
-    public async Task<WalletLedger> GetTransactionByIdAsync(Guid TransactionID)
+    public async Task<ICollection<WalletLedger>> GetTransaction(TransactionRequestModel transactionRequest)
     {
-        var query = await _transactionEvent.ShowAsync(TransactionID);
+        var transactionResult = await _transactionEvent.Transactions(query => query.
+            Where(x => x.TransactionType == transactionRequest.TransactionType && x.AccountId == transactionRequest.AccountId
+               && x.AccountType == transactionRequest.AccountType
+               && x.TransactionDate.Date >= transactionRequest.FromDate && x.TransactionDate <= transactionRequest.ToDate));
+        return toPaymentTransactions((WalletEventResult)transactionResult);
+    }
+    
+    public async Task<WalletLedger> GetTransactionByAccountIdAsync(Guid accountId)
+    {
+        var query = await _transactionEvent.GetByAccountId(accountId);
         if (query is not WalletLedger result)
             throw new Exception("Invalid transaction data type");
         return result;
     }
-
+    public async Task<WalletLedger> GetTransactionByTransactionNoAsync(string transactionNo)
+    {
+        var query = await _transactionEvent.GetByTransactionNo(transactionNo);
+        if (query is not WalletLedger result)
+            throw new Exception("Invalid transaction data type");
+        return result;
+    }
+    
     public async Task<IWalletEventResult> GetLedgerWalletAsync(Guid Id)
     {
         IWalletEventResult? result = null;
