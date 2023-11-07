@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\erven\\source\\repos\\Wallet\\Wallet.csproj": {}
+    "C:\\Users\\kenza\\OneDrive\\Documents\\Workplace\\Wallet\\Wallet.csproj": {}
   },
   "projects": {
-    "C:\\Users\\erven\\source\\repos\\Wallet\\Wallet.csproj": {
+    "C:\\Users\\kenza\\OneDrive\\Documents\\Workplace\\Wallet\\Wallet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\erven\\source\\repos\\Wallet\\Wallet.csproj",
+        "projectUniqueName": "C:\\Users\\kenza\\OneDrive\\Documents\\Workplace\\Wallet\\Wallet.csproj",
         "projectName": "Wallet",
-        "projectPath": "C:\\Users\\erven\\source\\repos\\Wallet\\Wallet.csproj",
-        "packagesPath": "C:\\Users\\erven\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\erven\\source\\repos\\Wallet\\obj\\",
+        "projectPath": "C:\\Users\\kenza\\OneDrive\\Documents\\Workplace\\Wallet\\Wallet.csproj",
+        "packagesPath": "C:\\Users\\kenza\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\kenza\\OneDrive\\Documents\\Workplace\\Wallet\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\erven\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\kenza\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -95,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100-rc.1.23463.5\\RuntimeIdentifierGraph.json"
         }
       }
     }
