@@ -16,7 +16,6 @@ COPY WalletService.Domain/ WalletService.Domain/
 COPY WalletService.Persistence/ WalletService.Persistence/
 COPY WalletService.Application/ WalletService.Application/
 COPY WalletService.Infrastructure/ WalletService.Infrastructure/
-COPY WalletService.Common/ WalletService.Common/
 
 # Restore NuGet packages for the entire solution
 RUN dotnet restore
