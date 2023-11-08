@@ -12,10 +12,10 @@ ENV ASPNETCORE_ENVIRONMENT = Development
 # Copy the solution file and individual project files 
 COPY *.sln .
 COPY WalletService.API/ WalletService.API/
-COPY WalletService.Domain/ WalletService.Domain/
-COPY WalletService.Persistence/ WalletService.Persistence/
 COPY WalletService.Application/ WalletService.Application/
+COPY WalletService.Domain/ WalletService.Domain/
 COPY WalletService.Infrastructure/ WalletService.Infrastructure/
+COPY WalletService.Persistence/ WalletService.Persistence/
 
 # Restore NuGet packages for the entire solution
 RUN dotnet restore
