@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WalletService.API.Controllers;
 
 [Route("api/[controller]")]
-// [Authorize]
+[Authorize]
 [ApiController]
 public class AuthorizedApiControllerBase : ControllerBase
 {
