@@ -26,12 +26,12 @@ builder.Services.AddAuthorization();
 // CONFIGURATION BUILDER
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// // Configure the HTTP request pipeline.
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
 
 app.UseHttpsRedirection();
 
@@ -54,5 +54,8 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+
+app.UseSwagger(options => options.RouteTemplate = "swagger/{documentName}/swagger.json");
+app.UseSwaggerUI();
 
 app.Run();
