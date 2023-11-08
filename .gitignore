@@ -29,3 +29,8 @@ obj/
 *.exe
 *.pdb
 *.cache
+**/bin/Debug/
+**/bin/Release/
+Wallet/*/obj
+*/obj/
+/obj/Wallet.csproj.nuget.g.props
