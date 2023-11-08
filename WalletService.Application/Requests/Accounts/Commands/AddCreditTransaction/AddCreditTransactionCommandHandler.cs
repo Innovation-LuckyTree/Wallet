@@ -43,7 +43,7 @@ public class AddCreditTransactionCommandHandler : IRequestHandler<AddCreditTrans
             TransactionNo = request.TransactionNo,
             TransactionType = TransactionType.Credit,
             TransactionReference = request.TransactionReference,
-            Amount = request.Amount * -1,
+            Amount = request.Amount > 0 ? request.Amount * -1 : request.Amount,
             Notes = request.Notes,
         };
 }
