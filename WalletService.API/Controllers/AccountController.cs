@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WalletService.Application.Requests.Accounts.Commands.AddCreditTransaction;
 using WalletService.Application.Requests.Accounts.Commands.AddDebitTransaction;
+using WalletService.Application.Requests.Accounts.Queries.GetAccountBalance;
 using WalletService.Application.Requests.Accounts.Queries.GetAccountTransactions;
 
 namespace WalletService.API.Controllers;
@@ -14,6 +15,13 @@ public class AccountController : AuthorizedApiControllerBase
         return Ok(result);
     }
 
+    [HttpGet("balance/{id}")]
+    public async Task<IActionResult> GetAccountBalance(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new GetAccountBalanceQuery { AccountId = id }, cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost("credit")]
     public async Task<IActionResult> Post(AddCreditTransactionCommand request, CancellationToken cancellationToken)
     {
@@ -23,7 +31,7 @@ public class AccountController : AuthorizedApiControllerBase
     }
 
     [HttpPost("debit")]
-    public async Task<IActionResult> Post(AddDebitTransaction request, CancellationToken cancellationToken)
+     public async Task<IActionResult> Post(AddDebitTransaction request, CancellationToken cancellationToken)
     {
         await Mediator.Send(request, cancellationToken);
 
