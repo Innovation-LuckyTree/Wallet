@@ -8,7 +8,7 @@ public class AccountDto
     {
         Transactions = transactions;
         TotalDebit = transactions.Where(o => o.TransactionType == TransactionType.Debit).Sum(o => o.Amount);
-        TotalCredit = transactions.Where(o => o.TransactionType == TransactionType.Credit).Sum(o => o.Amount);
+        TotalCredit = transactions.Where(o => o.TransactionType == TransactionType.Credit).Sum(o => o.Amount) * -1;
     }
 
     public Guid AccountId { get; set; }
