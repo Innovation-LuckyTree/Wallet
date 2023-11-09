@@ -23,12 +23,12 @@ public class AddCreditTransactionCommandHandler : IRequestHandler<AddCreditTrans
 
         _ = accountWalletDoc ?? throw new EntityNotFoundException("Account", request.AccountId);
 
-        var walletTransaction = CreateWalletTransaction(request);
+        var totalBalance = accountWalletDoc.Account.WalletTransactions.Sum(o => o.Amount) + (request.Amount > 0 ? request.Amount * -1 : request.Amount);
+        accountWalletDoc.Account.Balance = totalBalance;
+
+        var walletTransaction = CreateWalletTransaction(request, totalBalance);
 
         accountWalletDoc.Account.WalletTransactions.Add(walletTransaction);
-
-        var totalBalance = accountWalletDoc.Account.WalletTransactions.Sum(o => o.Amount);
-        accountWalletDoc.Account.Balance = totalBalance;
 
         _walletDbContext.AccountWallets.Update(accountWalletDoc);
 
@@ -37,13 +37,14 @@ public class AddCreditTransactionCommandHandler : IRequestHandler<AddCreditTrans
         return Unit.Value;
     }
 
-    private WalletTransaction CreateWalletTransaction(AddCreditTransactionCommand request) =>
+    private WalletTransaction CreateWalletTransaction(AddCreditTransactionCommand request, decimal credit) =>
         new WalletTransaction
         {
             TransactionNo = request.TransactionNo,
             TransactionType = TransactionType.Credit,
             TransactionReference = request.TransactionReference,
             Amount = request.Amount > 0 ? request.Amount * -1 : request.Amount,
+            Credit = credit,
             Notes = request.Notes,
         };
 }

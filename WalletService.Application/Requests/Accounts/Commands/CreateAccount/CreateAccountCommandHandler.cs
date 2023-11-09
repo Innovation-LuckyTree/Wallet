@@ -15,7 +15,7 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
 
     public async Task<Unit> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
     {
-        var walletTransaction = CreateWalletTransaction(request);
+        var walletTransaction = CreateWalletTransaction(request, request.Amount);
 
         var accountWalletDoc = new AccountWalletDoc
         {
@@ -36,12 +36,13 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
         return Unit.Value;
     }
 
-    private WalletTransaction CreateWalletTransaction(CreateAccountCommand request) =>
+    private WalletTransaction CreateWalletTransaction(CreateAccountCommand request, decimal credit) =>
         new WalletTransaction
         {
             TransactionNo = request.TransactionNo,
             TransactionReference = request.TransactionReference,
             Amount = request.Amount,
             Notes = request.Notes,
+            Credit = credit
         };
 }

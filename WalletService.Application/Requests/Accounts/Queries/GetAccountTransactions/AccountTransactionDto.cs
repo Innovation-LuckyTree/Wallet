@@ -9,6 +9,7 @@ public class AccountTransactionDto
     public TransactionType TransactionType { get; set; }
     public string TransactionReference { get; set; }
     public decimal Amount { get; set; }
+    public decimal Credit { get; set; }
     public DateTime TransactionDate { get; set; }
     public string Notes { get; set; }
 }

@@ -32,12 +32,13 @@ public class AddDebitTransactionCommandHandler : IRequestHandler<AddDebitTransac
             return await _mediatr.Send(createCommand, cancellationToken);
         }
 
-        var walletTransaction = CreateWalletTransaction(request);
+        var totalBalance = accountWalletDoc.Account.WalletTransactions.Sum(o => o.Amount) + request.Amount;
+        
+        var walletTransaction = CreateWalletTransaction(request, totalBalance);
+
+        accountWalletDoc.Account.Balance = totalBalance;
 
         accountWalletDoc.Account.WalletTransactions.Add(walletTransaction);
-
-        var totalBalance = accountWalletDoc.Account.WalletTransactions.Sum(o => o.Amount);
-        accountWalletDoc.Account.Balance = totalBalance;
 
         _walletDbContext.AccountWallets.Update(accountWalletDoc);
 
@@ -46,13 +47,14 @@ public class AddDebitTransactionCommandHandler : IRequestHandler<AddDebitTransac
         return Unit.Value;
     }
 
-    private WalletTransaction CreateWalletTransaction(AddDebitTransaction request) =>
+    private WalletTransaction CreateWalletTransaction(AddDebitTransaction request, decimal credit) =>
     new WalletTransaction
     {
         TransactionType = TransactionType.Debit,
         TransactionNo = request.TransactionNo,
         TransactionReference = request.TransactionReference,
         Amount = request.Amount,
+        Credit = credit,
         Notes = request.Notes,
     };
 }

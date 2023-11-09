@@ -26,6 +26,7 @@ public class GetAccountTransactionsQueryHandler : IRequestHandler<GetAccountTran
             TransactionReference = o.TransactionReference,
             Amount = o.Amount,
             TransactionDate = o.TransactionDate,
+            Credit = o.Credit,
             Notes = o.Notes,
         });
 
