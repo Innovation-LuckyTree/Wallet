@@ -27,7 +27,8 @@ public class GetAccountTransactionsQueryHandler : IRequestHandler<GetAccountTran
             Amount = o.Amount,
             TransactionDate = o.TransactionDate,
             Credit = o.Credit,
-            Notes = o.Notes,
+            ModeOfTransaction = o.ModeOfTransaction,
+            Notes = o.Notes
         });
 
         return new AccountDto(transactions)

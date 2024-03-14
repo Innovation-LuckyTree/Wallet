@@ -43,6 +43,7 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
             TransactionReference = request.TransactionReference,
             Amount = request.Amount,
             Notes = request.Notes,
-            Credit = credit
+            Credit = credit,
+            ModeOfTransaction = request.ModeOfTransaction
         };
 }

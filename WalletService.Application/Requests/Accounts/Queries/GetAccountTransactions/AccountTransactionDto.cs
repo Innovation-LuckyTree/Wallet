@@ -11,5 +11,6 @@ public class AccountTransactionDto
     public decimal Amount { get; set; }
     public decimal Credit { get; set; }
     public DateTime TransactionDate { get; set; }
+    public string ModeOfTransaction { get; set; }
     public string Notes { get; set; }
 }

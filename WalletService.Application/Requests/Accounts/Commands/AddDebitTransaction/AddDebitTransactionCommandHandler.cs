@@ -56,5 +56,6 @@ public class AddDebitTransactionCommandHandler : IRequestHandler<AddDebitTransac
         Amount = request.Amount,
         Credit = credit,
         Notes = request.Notes,
+        ModeOfTransaction = request.ModeOfTransaction
     };
 }

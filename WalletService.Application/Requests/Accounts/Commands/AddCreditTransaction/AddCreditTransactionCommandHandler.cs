@@ -46,5 +46,6 @@ public class AddCreditTransactionCommandHandler : IRequestHandler<AddCreditTrans
             Amount = request.Amount > 0 ? request.Amount * -1 : request.Amount,
             Credit = credit,
             Notes = request.Notes,
+            ModeOfTransaction = request.ModeOfTransaction
         };
 }

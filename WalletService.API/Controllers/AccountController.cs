@@ -31,7 +31,7 @@ public class AccountController : AuthorizedApiControllerBase
     }
 
     [HttpPost("debit")]
-     public async Task<IActionResult> Post(AddDebitTransaction request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post(AddDebitTransaction request, CancellationToken cancellationToken)
     {
         await Mediator.Send(request, cancellationToken);
 
