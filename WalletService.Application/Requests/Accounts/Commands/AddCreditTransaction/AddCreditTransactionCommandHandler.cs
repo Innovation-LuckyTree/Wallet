@@ -10,7 +10,7 @@ public class AddCreditTransactionCommandHandler : IRequestHandler<AddCreditTrans
 {
     private readonly IWalletDbContext _walletDbContext;
 
-    public AddCreditTransactionCommandHandler(IWalletDbContext walletDbContext, IMediator mediatr)
+    public AddCreditTransactionCommandHandler(IWalletDbContext walletDbContext)
     {
         _walletDbContext = walletDbContext;
     }

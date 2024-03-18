@@ -27,7 +27,7 @@ public class AddDebitTransactionCommandHandler : IRequestHandler<AddDebitTransac
         if (accountWalletDoc == null)
         {
             var createCommand = new CreateAccountCommand(request.AccountId, request.AccountType,
-                request.TransactionNo, request.TransactionReference, request.Amount, request.Notes);
+                request.TransactionNo, request.TransactionReference, request.Amount, request.ModeOfTransaction, request.Notes);
 
             return await _mediatr.Send(createCommand, cancellationToken);
         }
