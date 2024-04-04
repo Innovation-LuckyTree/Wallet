@@ -1,6 +1,6 @@
 using WalletService.Domain.Enums;
 
-namespace WalletService.Application.Requests.Accounts.Queries.GetAccountTransactions;
+namespace WalletService.Application.Requests.Accounts.Queries;
 
 public class AccountTransactionDto
 {

@@ -22,6 +22,14 @@ public class AccountController : AuthorizedApiControllerBase
         return Ok(result);
     }
 
+    [HttpPost("transaction/search")]
+    public async Task<IActionResult> SearchTransactions(GetPagedAccountTransactionsQuery request, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(request, cancellationToken);
+
+        return Ok(result);
+    }
+
     [HttpPost("credit")]
     public async Task<IActionResult> Post(AddCreditTransactionCommand request, CancellationToken cancellationToken)
     {
