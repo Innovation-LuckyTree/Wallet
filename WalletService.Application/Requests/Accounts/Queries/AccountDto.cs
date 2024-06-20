@@ -30,7 +30,7 @@ public class AccountDto
     {
         get
         {
-            return Transactions.Count();
+            return Transactions?.Count() ?? 0;
         }
     }
 

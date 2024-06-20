@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string connString = builder.Configuration.GetConnectionString("Wallet");
+string connString = builder.Configuration.GetConnectionString("WalletLedger");
 
 builder.Services.AddPersistenceLayer(connString);
 builder.Services.AddConfigurations(builder.Configuration);

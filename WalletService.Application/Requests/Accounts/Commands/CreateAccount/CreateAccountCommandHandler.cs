@@ -17,33 +17,30 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
     {
         var walletTransaction = CreateWalletTransaction(request, request.Amount);
 
-        var accountWalletDoc = new AccountWalletDoc
+        var account = new Account
         {
-            Id = request.AccountId,
-            Account = new Account
-            {
-                AccountId = request.AccountId,
-                AccountType = request.AccountType,
-                Balance = request.Amount,
-                WalletTransactions = new[] { walletTransaction }
-            }
+            AccountId = request.AccountId,
+            AccountType = request.AccountType,
+            Balance = request.Amount,
+            WalletTransactions = [walletTransaction]
         };
 
-        _walletDbContext.AccountWallets.Add(accountWalletDoc);
+        _walletDbContext.Accounts.Add(account);
 
         await _walletDbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }
 
-    private WalletTransaction CreateWalletTransaction(CreateAccountCommand request, decimal credit) =>
-        new WalletTransaction
+    private WalletTransaction CreateWalletTransaction(CreateAccountCommand request, decimal credit)
+        => new()
         {
             TransactionNo = request.TransactionNo,
             TransactionReference = request.TransactionReference,
             Amount = request.Amount,
             Notes = request.Notes,
             Credit = credit,
+            PreviousBalance = 0,
             ModeOfTransaction = request.ModeOfTransaction
         };
 }

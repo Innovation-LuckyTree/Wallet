@@ -4,7 +4,7 @@ public class Account
 {
     public Account()
     {
-        WalletTransactions = new List<WalletTransaction>();
+        WalletTransactions = new HashSet<WalletTransaction>();
     }
 
     public Guid AccountId { get; set; }
@@ -12,5 +12,5 @@ public class Account
     public decimal Balance { get; set; } = 0;
     public DateTime DateUpdated { get; set; } = DateTime.Now;
 
-    public IList<WalletTransaction> WalletTransactions { get; set; }
+    public virtual IEnumerable<WalletTransaction> WalletTransactions { get; set; }
 }

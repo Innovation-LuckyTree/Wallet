@@ -20,11 +20,11 @@ public class AddDebitTransactionCommandHandler : IRequestHandler<AddDebitTransac
 
     public async Task<Unit> Handle(AddDebitTransaction request, CancellationToken cancellationToken)
     {
-        var accountWalletDoc = await _walletDbContext.AccountWallets
-            .Where(o => o.Id == request.AccountId)
+        var account = await _walletDbContext.Accounts
+            .Where(o => o.AccountId == request.AccountId)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (accountWalletDoc == null)
+        if (account == null)
         {
             var createCommand = new CreateAccountCommand(request.AccountId, request.AccountType,
                 request.TransactionNo, request.TransactionReference, request.Amount, request.ModeOfTransaction, request.Notes);
@@ -32,29 +32,31 @@ public class AddDebitTransactionCommandHandler : IRequestHandler<AddDebitTransac
             return await _mediatr.Send(createCommand, cancellationToken);
         }
 
-        var totalBalance = accountWalletDoc.Account.WalletTransactions.Sum(o => o.Amount) + request.Amount;
-        
-        var walletTransaction = CreateWalletTransaction(request, totalBalance);
+        var totalBalance = account.Balance + request.Amount;
 
-        accountWalletDoc.Account.Balance = totalBalance;
+        var walletTransaction = CreateWalletTransaction(request, totalBalance, account.Balance);
 
-        accountWalletDoc.Account.WalletTransactions.Add(walletTransaction);
+        account.Balance = totalBalance;
 
-        _walletDbContext.AccountWallets.Update(accountWalletDoc);
+        _walletDbContext.WalletTransactions.Add(walletTransaction);
+
+        _walletDbContext.Accounts.Update(account);
 
         await _walletDbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }
 
-    private WalletTransaction CreateWalletTransaction(AddDebitTransaction request, decimal credit) =>
+    private WalletTransaction CreateWalletTransaction(AddDebitTransaction request, decimal credit, decimal previosBalance) =>
     new WalletTransaction
     {
+        AccountId = request.AccountId,
         TransactionType = TransactionType.Debit,
         TransactionNo = request.TransactionNo,
         TransactionReference = request.TransactionReference,
         Amount = request.Amount,
         Credit = credit,
+        PreviousBalance = previosBalance,
         Notes = request.Notes,
         ModeOfTransaction = request.ModeOfTransaction
     };

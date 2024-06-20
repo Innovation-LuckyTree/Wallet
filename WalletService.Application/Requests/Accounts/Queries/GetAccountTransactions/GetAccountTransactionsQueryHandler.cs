@@ -15,26 +15,39 @@ public class GetAccountTransactionsQueryHandler : IRequestHandler<GetAccountTran
 
     public async Task<AccountDto> Handle(GetAccountTransactionsQuery request, CancellationToken cancellationToken)
     {
-        var accountDoc = await _walletDbContext.AccountWallets.Where(o => o.Id == request.AccountId)
+        var account = await _walletDbContext.Accounts
+            .Where(o => o.AccountId == request.AccountId)
             .FirstOrDefaultAsync(cancellationToken);
 
-        var transactions = accountDoc.Account.WalletTransactions.Select(o => new AccountTransactionDto
+        if (account == null)
         {
-            Id = o.Id,
-            TransactionNo = o.TransactionNo,
-            TransactionType = o.TransactionType,
-            TransactionReference = o.TransactionReference,
-            Amount = o.Amount,
-            TransactionDate = o.TransactionDate,
-            Credit = o.Credit,
-            ModeOfTransaction = o.ModeOfTransaction,
-            Notes = o.Notes
-        });
+            return new AccountDto([])
+            {
+                AccountId = request.AccountId,
+                AccountType = ""
+            };
+        }
 
-        return new AccountDto(transactions)
+        var accountTransactions = await _walletDbContext.WalletTransactions.Where(o => o.AccountId == request.AccountId)
+            .OrderByDescending(o => o.TransactionDate)
+            .Select(o => new AccountTransactionDto
+            {
+                Id = o.Id,
+                TransactionNo = o.TransactionNo,
+                TransactionType = o.TransactionType,
+                TransactionReference = o.TransactionReference,
+                Amount = o.Amount,
+                TransactionDate = o.TransactionDate,
+                Credit = o.Credit,
+                PreviousCredit = o.PreviousBalance,
+                ModeOfTransaction = o.ModeOfTransaction,
+                Notes = o.Notes
+            }).ToListAsync(cancellationToken);
+
+        return new AccountDto(accountTransactions)
         {
-            AccountId = accountDoc.Id,
-            AccountType = accountDoc.Account.AccountType
+            AccountId = account.AccountId,
+            AccountType = account.AccountType
         };
     }
 }

@@ -11,12 +11,13 @@ public class WalletDbContext : DbContext, IWalletDbContext
     {
     }
 
-    public DbSet<AccountWalletDoc> AccountWallets { get; set; }
+    public DbSet<Account> Accounts { get; set; }
+    public DbSet<WalletTransaction> WalletTransactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AccountWalletDoc>()
-            .Property(b => b.Account)
-            .HasColumnType("jsonb");
+        modelBuilder.HasAnnotation("ProductVersion", "1.1.1-servicing");
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(WalletDbContext).Assembly);
     }
 }

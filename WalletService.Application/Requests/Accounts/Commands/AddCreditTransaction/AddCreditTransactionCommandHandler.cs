@@ -17,34 +17,36 @@ public class AddCreditTransactionCommandHandler : IRequestHandler<AddCreditTrans
 
     public async Task<Unit> Handle(AddCreditTransactionCommand request, CancellationToken cancellationToken)
     {
-        var accountWalletDoc = await _walletDbContext.AccountWallets
-            .Where(o => o.Id == request.AccountId)
+        var account = await _walletDbContext.Accounts
+            .Where(o => o.AccountId == request.AccountId)
             .FirstOrDefaultAsync(cancellationToken);
 
-        _ = accountWalletDoc ?? throw new EntityNotFoundException("Account", request.AccountId);
+        _ = account ?? throw new EntityNotFoundException("Account", request.AccountId);
 
-        var totalBalance = accountWalletDoc.Account.WalletTransactions.Sum(o => o.Amount) + (request.Amount > 0 ? request.Amount * -1 : request.Amount);
-        accountWalletDoc.Account.Balance = totalBalance;
+        var totalBalance = account.Balance + (request.Amount > 0 ? request.Amount * -1 : request.Amount);
 
-        var walletTransaction = CreateWalletTransaction(request, totalBalance);
+        account.Balance = totalBalance;
 
-        accountWalletDoc.Account.WalletTransactions.Add(walletTransaction);
+        var walletTransaction = CreateWalletTransaction(request, totalBalance, account.Balance);
 
-        _walletDbContext.AccountWallets.Update(accountWalletDoc);
+        _walletDbContext.WalletTransactions.Add(walletTransaction);
+        _walletDbContext.Accounts.Update(account);
 
         await _walletDbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
     }
 
-    private WalletTransaction CreateWalletTransaction(AddCreditTransactionCommand request, decimal credit) =>
-        new WalletTransaction
+    private WalletTransaction CreateWalletTransaction(AddCreditTransactionCommand request, decimal credit, decimal previosBalance)
+        => new()
         {
+            AccountId = request.AccountId,
             TransactionNo = request.TransactionNo,
             TransactionType = TransactionType.Credit,
             TransactionReference = request.TransactionReference,
             Amount = request.Amount > 0 ? request.Amount * -1 : request.Amount,
             Credit = credit,
+            PreviousBalance = previosBalance,
             Notes = request.Notes,
             ModeOfTransaction = request.ModeOfTransaction
         };

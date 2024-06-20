@@ -15,12 +15,12 @@ public class GetAccountBalanceQueryHandler : IRequestHandler<GetAccountBalanceQu
 
     public async Task<AccountBalance> Handle(GetAccountBalanceQuery request, CancellationToken cancellationToken)
     {
-        var accountBalance = await _walletDbContext.AccountWallets.Where(o => o.Id == request.AccountId)
+        var accountBalance = await _walletDbContext.Accounts.Where(o => o.AccountId == request.AccountId)
             .Select(o => new AccountBalance
             {
-                AccountId = o.Id,
-                AccountType = o.Account.AccountType,
-                Balance = o.Account.Balance
+                AccountId = o.AccountId,
+                AccountType = o.AccountType,
+                Balance = o.Balance
             })
             .FirstOrDefaultAsync(cancellationToken);
 
