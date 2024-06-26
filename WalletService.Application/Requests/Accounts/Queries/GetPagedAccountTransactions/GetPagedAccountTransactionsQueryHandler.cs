@@ -46,10 +46,12 @@ public class GetPagedAccountTransactionsQueryHandler(IWalletDbContext walletDbCo
 
         totalCount = query.Count();
 
+        query = query.OrderByDescending(o => o.WalletTransactionId);
+
         query = query.Skip(request.Start);
         query = query.Take(request.PageSize);
 
-        var transactions = await query.OrderByDescending(o => o.TransactionDate).Select(o => new AccountTransactionDto
+        var transactions = await query.Select(o => new AccountTransactionDto
         {
             Id = o.Id,
             TransactionNo = o.TransactionNo,

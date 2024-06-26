@@ -23,11 +23,15 @@ public class AddCreditTransactionCommandHandler : IRequestHandler<AddCreditTrans
 
         _ = account ?? throw new EntityNotFoundException("Account", request.AccountId);
 
-        var totalBalance = account.Balance + (request.Amount > 0 ? request.Amount * -1 : request.Amount);
+        var currentTotalCredits = await _walletDbContext.WalletTransactions
+            .Where(o => o.AccountId == request.AccountId)
+            .SumAsync(e => e.Amount, cancellationToken);
+
+        var totalBalance = currentTotalCredits + (request.Amount > 0 ? request.Amount * -1 : request.Amount);
 
         account.Balance = totalBalance;
 
-        var walletTransaction = CreateWalletTransaction(request, totalBalance, account.Balance);
+        var walletTransaction = CreateWalletTransaction(request, totalBalance, currentTotalCredits);
 
         _walletDbContext.WalletTransactions.Add(walletTransaction);
         _walletDbContext.Accounts.Update(account);

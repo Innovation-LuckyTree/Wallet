@@ -32,9 +32,13 @@ public class AddDebitTransactionCommandHandler : IRequestHandler<AddDebitTransac
             return await _mediatr.Send(createCommand, cancellationToken);
         }
 
-        var totalBalance = account.Balance + request.Amount;
+        var currentTotalCredits = await _walletDbContext.WalletTransactions
+            .Where(o => o.AccountId == request.AccountId)
+            .SumAsync(e => e.Amount, cancellationToken);
 
-        var walletTransaction = CreateWalletTransaction(request, totalBalance, account.Balance);
+        var totalBalance = currentTotalCredits + request.Amount;
+
+        var walletTransaction = CreateWalletTransaction(request, totalBalance, currentTotalCredits);
 
         account.Balance = totalBalance;
 
