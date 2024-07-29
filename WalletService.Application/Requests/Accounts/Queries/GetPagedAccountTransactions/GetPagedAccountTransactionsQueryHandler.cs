@@ -30,10 +30,14 @@ public class GetPagedAccountTransactionsQueryHandler(IWalletDbContext walletDbCo
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(request.SearchKey))
-            query = query.Where(t => t.TransactionReference.Contains(request.SearchKey)
-                || t.TransactionNo.Contains(request.SearchKey)
-                || t.ModeOfTransaction.Contains(request.SearchKey)
-                || t.Notes.Contains(request.SearchKey));
+        {
+            var searchKeys = request.SearchKey.Split('|');
+
+            query = query.Where(t => searchKeys.Any(e => t.TransactionReference.Contains(e))
+                || searchKeys.Any(e => t.TransactionNo.Contains(e))
+                || searchKeys.Any(e => t.ModeOfTransaction.Contains(e))
+                || searchKeys.Any(e => t.Notes.Contains(e)));
+        }
 
         if (request.TransactionType.HasValue)
             query = query.Where(t => t.TransactionType == request.TransactionType);
