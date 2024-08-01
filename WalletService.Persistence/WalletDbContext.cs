@@ -13,6 +13,8 @@ public class WalletDbContext : DbContext, IWalletDbContext
 
     public DbSet<Account> Accounts { get; set; }
     public DbSet<WalletTransaction> WalletTransactions { get; set; }
+    public DbSet<BonusAccount> BonusAccounts { get; set; }
+    public DbSet<BonusWalletTransaction> BonusWalletTransactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

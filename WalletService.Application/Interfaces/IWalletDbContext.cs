@@ -7,6 +7,8 @@ public interface IWalletDbContext
 {
     DbSet<Account> Accounts { get; set; }
     DbSet<WalletTransaction> WalletTransactions { get; set; }
+    DbSet<BonusAccount> BonusAccounts { get; set; }
+    DbSet<BonusWalletTransaction> BonusWalletTransactions { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

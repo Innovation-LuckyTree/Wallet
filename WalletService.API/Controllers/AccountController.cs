@@ -6,6 +6,7 @@ using WalletService.Application.Requests.Accounts.Queries.GetAccountTransactions
 
 namespace WalletService.API.Controllers;
 
+[Route("api/account")]
 public class AccountController : AuthorizedApiControllerBase
 {
     [HttpGet("{id}")]
@@ -23,7 +24,7 @@ public class AccountController : AuthorizedApiControllerBase
     }
 
     [HttpPost("transaction/search")]
-    public async Task<IActionResult> SearchTransactions(GetPagedAccountTransactionsQuery request, CancellationToken cancellationToken)
+    public async Task<IActionResult> SearchTransactions([FromBody] GetPagedAccountTransactionsQuery request, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(request, cancellationToken);
 
@@ -39,7 +40,7 @@ public class AccountController : AuthorizedApiControllerBase
     }
 
     [HttpPost("debit")]
-    public async Task<IActionResult> Post(AddDebitTransaction request, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddDebitTransaction(AddDebitTransaction request, CancellationToken cancellationToken)
     {
         await Mediator.Send(request, cancellationToken);
 
