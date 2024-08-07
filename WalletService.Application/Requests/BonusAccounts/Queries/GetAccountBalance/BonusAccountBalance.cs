@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace WalletService.Application.Requests.BonusAccounts.Queries.GetBonusAccountBalance;
 
 public class BonusAccountBalance
@@ -10,6 +12,10 @@ public class BonusAccountBalance
 
 public class PromotionDetail
 {
+    [JsonIgnore]
+    public Guid AccountId { get; set; }
+    [JsonIgnore]
+    public string AccountType { get; set; }
     public int PromotionId { get; set; }
     public DateTime DateStarted { get; set; }
     public DateTime ExpirationDate { get; set; }
