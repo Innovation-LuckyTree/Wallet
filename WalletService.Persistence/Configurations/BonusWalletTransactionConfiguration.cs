@@ -21,6 +21,7 @@ public class BonusWalletTransactionConfiguration : IEntityTypeConfiguration<Bonu
             .IsRequired(false);
 
         builder.Property(x => x.PromotionId)
+            .HasColumnType("bigint")
             .IsRequired(true);
 
         builder.Property(x => x.DateStarted)

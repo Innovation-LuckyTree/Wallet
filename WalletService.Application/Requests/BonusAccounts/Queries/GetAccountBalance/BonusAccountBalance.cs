@@ -16,7 +16,7 @@ public class PromotionDetail
     public Guid AccountId { get; set; }
     [JsonIgnore]
     public string AccountType { get; set; }
-    public int PromotionId { get; set; }
+    public long PromotionId { get; set; }
     public DateTime DateStarted { get; set; }
     public DateTime ExpirationDate { get; set; }
     public decimal RemainingAmount { get; set; }

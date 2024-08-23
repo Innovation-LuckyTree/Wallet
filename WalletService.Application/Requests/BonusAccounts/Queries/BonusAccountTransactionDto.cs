@@ -8,7 +8,7 @@ public class BonusAccountTransactionDto
     public Guid AccountId { get; set; }
     public string TransactionNo { get; set; }
     public TransactionType TransactionType { get; set; }
-    public int? PromotionId { get; set; }
+    public long? PromotionId { get; set; }
     public DateTime? DateStarted { get; set; }
     public DateTime? DateExpired { get; set; }
     public string TransactionReference { get; set; }
