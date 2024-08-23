@@ -3,6 +3,7 @@ using WalletService.Application.Requests.BonusAccounts.Commands.AddBonusCreditTr
 using WalletService.Application.Requests.BonusAccounts.Commands.AddBonusDebitTransaction;
 using WalletService.Application.Requests.BonusAccounts.Queries.GetAccountTransactions;
 using WalletService.Application.Requests.BonusAccounts.Queries.GetBonusAccountBalance;
+using WalletService.Application.Requests.BonusAccounts.Queries.GetBonusPromotionBalance;
 using WalletService.Application.Requests.BonusAccounts.Queries.GetPagedBonusTransactions;
 
 namespace WalletService.API.Controllers;
@@ -32,6 +33,14 @@ public class BonusAccountController : AuthorizedApiControllerBase
         return Ok(result);
     }
 
+    [HttpPost("transaction/promotion")]
+    public async Task<IActionResult> GetPromoTransactions([FromBody] GetBonusPromotionBalanceQuery request, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(request, cancellationToken);
+
+        return Ok(result);
+    }
+
     [HttpPost("credit")]
     public async Task<IActionResult> Post(AddBonusCreditTransactionCommand request, CancellationToken cancellationToken)
     {
@@ -39,6 +48,7 @@ public class BonusAccountController : AuthorizedApiControllerBase
 
         return Ok();
     }
+
 
     [HttpPost("debit")]
     public async Task<IActionResult> AddDebitTransaction(AddBonusDebitTransactionCommand request, CancellationToken cancellationToken)
