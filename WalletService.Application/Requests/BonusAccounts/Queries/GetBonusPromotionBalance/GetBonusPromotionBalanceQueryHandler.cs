@@ -16,6 +16,7 @@ public class GetBonusPromotionBalanceQueryHandler(IWalletDbContext walletDbConte
             .Select(o => new BonusAccountTransactionDto
             {
                 Id = o.Id,
+                AccountId = o.AccountId,
                 TransactionNo = o.TransactionNo,
                 TransactionType = o.TransactionType,
                 TransactionReference = o.TransactionReference,
