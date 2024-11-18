@@ -68,6 +68,7 @@ public class GetPagedBonusTransactionsQueryHandler(IWalletDbContext walletDbCont
         var transactions = await query.Select(o => new BonusAccountTransactionDto
         {
             Id = o.Id,
+            AccountId = o.AccountId,
             TransactionNo = o.TransactionNo,
             TransactionType = o.TransactionType,
             TransactionReference = o.TransactionReference,

@@ -23,6 +23,14 @@ public class AccountController : AuthorizedApiControllerBase
         return Ok(result);
     }
 
+    [HttpPost("balance/list")]
+    public async Task<IActionResult> GetAccountListBalance([FromBody] GetPagedAccountTransactionsQuery request, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(request, cancellationToken);
+
+        return Ok(result);
+    }
+
     [HttpPost("transaction/search")]
     public async Task<IActionResult> SearchTransactions([FromBody] GetPagedAccountTransactionsQuery request, CancellationToken cancellationToken)
     {
