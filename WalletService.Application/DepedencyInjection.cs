@@ -8,7 +8,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
     {
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(opts => opts.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         return services;
     }
