@@ -45,11 +45,22 @@ public class GetPagedAccountTransactionsQueryHandler(IWalletDbContext walletDbCo
         if (request.EndDate.HasValue)
             query = query.Where(t => t.TransactionDate <= request.EndDate);
 
-        var totalCount = await query.CountAsync(cancellationToken);
-        var totalDebit = await query.Where(t => t.TransactionType == TransactionType.Debit).SumAsync(t => (decimal?)t.Amount, cancellationToken: cancellationToken) ?? 0;
-        var totalCredit = await query.Where(t => t.TransactionType == TransactionType.Credit).SumAsync(t => (decimal?)t.Amount, cancellationToken: cancellationToken)  * -1 ?? 0;
-        var debitTransactionCount = await query.CountAsync(t => t.TransactionType == TransactionType.Debit, cancellationToken);
-        var creditsTransactionCount = await query.CountAsync(t => t.TransactionType == TransactionType.Credit, cancellationToken);
+        var summary = await query.GroupBy(t => 1)
+            .Select(g => new
+            {
+                TotalCount = g.Count(),
+                TotalDebit = g.Where(t => t.TransactionType == TransactionType.Debit).Sum(t => (decimal?)t.Amount) ?? 0,
+                TotalCredit = g.Where(t => t.TransactionType == TransactionType.Credit).Sum(t => (decimal?)t.Amount) * -1 ?? 0,
+                DebitTransactionCount = g.Count(t => t.TransactionType == TransactionType.Debit),
+                CreditsTransactionCount = g.Count(t => t.TransactionType == TransactionType.Credit)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        var totalCount = summary?.TotalCount ?? 0;
+        var totalDebit = summary?.TotalDebit ?? 0;
+        var totalCredit = summary?.TotalCredit ?? 0;
+        var debitTransactionCount = summary?.DebitTransactionCount ?? 0;
+        var creditsTransactionCount = summary?.CreditsTransactionCount ?? 0;
 
         var transactions = await query
             .OrderByDescending(o => o.WalletTransactionId)
