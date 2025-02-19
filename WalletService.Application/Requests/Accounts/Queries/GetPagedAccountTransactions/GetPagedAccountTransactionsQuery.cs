@@ -3,7 +3,7 @@ using WalletService.Domain.Enums;
 
 namespace WalletService.Application.Requests.Accounts.Queries.GetAccountTransactions;
 
-public class GetPagedAccountTransactionsQuery : IRequest<AccountDto>
+public class GetPagedAccountTransactionsQuery : IRequest<TransactionsAccountDto>
 {
     public Guid AccountId { get; set; }
     public string SearchKey { get; set; }
