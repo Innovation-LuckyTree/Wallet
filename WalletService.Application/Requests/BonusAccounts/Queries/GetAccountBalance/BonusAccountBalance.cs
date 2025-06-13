@@ -17,8 +17,8 @@ public class PromotionDetail
     [JsonIgnore]
     public string AccountType { get; set; }
     public long PromotionId { get; set; }
-    public DateTime DateStarted { get; set; }
-    public DateTime ExpirationDate { get; set; }
+    public DateTimeOffset DateStarted { get; set; }
+    public DateTimeOffset ExpirationDate { get; set; }
     public decimal RemainingAmount { get; set; }
     public decimal ConsumedAmount { get; set; }
 }

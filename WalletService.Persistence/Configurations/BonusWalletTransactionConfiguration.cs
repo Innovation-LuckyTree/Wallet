@@ -12,7 +12,7 @@ public class BonusWalletTransactionConfiguration : IEntityTypeConfiguration<Bonu
         builder.HasKey(x => x.BonusWalletTransactionId);
 
         builder.Property(x => x.BonusWalletTransactionId)
-            .UseIdentityColumn(1, 1);
+            .UseIdentityColumn();
 
         builder.Property(x => x.TransactionNo)
             .IsRequired(false);

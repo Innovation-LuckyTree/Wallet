@@ -10,6 +10,6 @@ public class GetPagedAccountTransactionsQuery : IRequest<TransactionsAccountDto>
     public TransactionType? TransactionType { get; set; }
     public int Start { get; set; } = 0;
     public int PageSize { get; set; } = 20;
-    public DateTime? StartDate { get; set; } = DateTime.Now.AddDays(-7);
-    public DateTime? EndDate { get; set; } = DateTime.Now;
+    public DateTimeOffset? StartDate { get; set; } = DateTime.UtcNow.AddDays(-7);
+    public DateTimeOffset? EndDate { get; set; } = DateTime.UtcNow;
 }

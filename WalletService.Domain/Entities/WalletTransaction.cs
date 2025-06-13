@@ -12,7 +12,7 @@ public class WalletTransaction
     public string TransactionReference { get; set; }
     public decimal Amount { get; set; }
     public decimal Credit { get; set; }
-    public DateTime TransactionDate { get; set; } = DateTime.Now;
+    public DateTimeOffset TransactionDate { get; set; } = DateTime.UtcNow;
     public decimal PreviousBalance { get; set; } = 0;
     public string ModeOfTransaction { get; set; }
     public string Notes { get; set; }

@@ -10,7 +10,7 @@ public class BonusAccount
     public Guid BonusAccountId { get; set; }
     public string BonusAccountType { get; set; }
     public decimal Balance { get; set; } = 0;
-    public DateTime DateUpdated { get; set; } = DateTime.Now;
+    public DateTimeOffset DateUpdated { get; set; } = DateTime.UtcNow;
 
     public virtual IEnumerable<BonusWalletTransaction> BonusWalletTransactions { get; set; }
 }

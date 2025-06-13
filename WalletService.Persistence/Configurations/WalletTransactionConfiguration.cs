@@ -12,7 +12,7 @@ public class WalletTransactionConfiguration : IEntityTypeConfiguration<WalletTra
         builder.HasKey(x => x.WalletTransactionId);
 
         builder.Property(x => x.WalletTransactionId)
-            .UseIdentityColumn(1, 1);
+            .UseIdentityColumn();
 
         builder.Property(x => x.TransactionNo)
             .IsRequired(false);

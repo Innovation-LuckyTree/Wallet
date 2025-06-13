@@ -10,7 +10,7 @@ public class Account
     public Guid AccountId { get; set; }
     public string AccountType { get; set; }
     public decimal Balance { get; set; } = 0;
-    public DateTime DateUpdated { get; set; } = DateTime.Now;
+    public DateTimeOffset DateUpdated { get; set; } = DateTime.UtcNow;
 
     public virtual IEnumerable<WalletTransaction> WalletTransactions { get; set; }
 }

@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WalletService.Persistence;
 
 #nullable disable
@@ -18,25 +18,25 @@ namespace WalletService.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1-servicing")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("WalletService.Domain.Entities.Account", b =>
                 {
                     b.Property<Guid>("AccountId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("AccountType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("DateUpdated")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("AccountId");
 
@@ -47,17 +47,17 @@ namespace WalletService.Persistence.Migrations
                 {
                     b.Property<Guid>("BonusAccountId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<string>("BonusAccountType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("DateUpdated")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("BonusAccountId");
 
@@ -70,49 +70,49 @@ namespace WalletService.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BonusWalletTransactionId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("BonusWalletTransactionId"));
 
                     b.Property<Guid>("AccountId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("Credit")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
-                    b.Property<DateTime>("DateExpired")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("DateExpired")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DateStarted")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("DateStarted")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ModeOfTransaction")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("PreviousBalance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<long>("PromotionId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("TransactionDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("TransactionNo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("TransactionReference")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("TransactionType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("BonusWalletTransactionId");
 
@@ -127,40 +127,40 @@ namespace WalletService.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("WalletTransactionId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("WalletTransactionId"));
 
                     b.Property<Guid>("AccountId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("Credit")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ModeOfTransaction")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("PreviousBalance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("TransactionDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("TransactionNo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("TransactionReference")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("TransactionType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("WalletTransactionId");
 
